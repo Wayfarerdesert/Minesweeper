@@ -1,30 +1,49 @@
 import { useState } from 'react';
 import './App.css';
 import Cell from './Cell';
+import Time from './Time';
 
 function App() {
+  // Game Calls Values
+  const values = [
+    '1', '0', '*', '1', '0',
+    '*', '1', '0', '1', '2',
+    '1', '0', '*', '2', '0',
+    '*', '1', '0', '1', '0',
+    '1', '2', '*', '1', '2'
+  ]
+
   // Define cells componets values
-  const [valueMap, setValueMap]=useState(Array(25).fill(" "));
+  const [valueMap, setValueMap] = useState(Array(25).fill(" "));
   const cell = valueMap.map((item, index) =>
-    <div className='col-auto p-0' key={index}><Cell value={item} /></div>
+    <div className='col-auto p-0' key={index}><Cell value={item} onCellClick={() => showValue(index)} /></div>
   );
 
-  console.log("----- CARGAMOS APP")
+  // console.log("----- CARGAMOS APP")
+
+  // Timer Starter
+  const [timerStarted, setTimerStarter] = useState(false);
+
   // Function response START btn
   const btnStart = () => {
-    setValueMap([
-      '1', '0', '*', '1', '0',
-      '*', '1', '0', '1', '2',
-      '1', '0', '*', '2', '0',
-      '*', '1', '0', '1', '0',
-      '1', '2', '*', '1', '2'
-    ]);
-
-    // const cell = valueMap.map((item, index) =>
-    //   <div className='col-auto p-0' key={index}><Cell value={item} /></div>
-    // );
+    setValueMap(Array(25).fill(" "));
+    setTimerStarter(true);
     // alert('START THE GAME!')
   }
+
+  // Change cell value
+  const showValue = (index) => {
+    const newValue = valueMap.slice();
+    newValue[index] = values[index];
+    setValueMap(newValue);
+    // console.log(value)
+  }
+
+
+
+  // const startTimer = () => {
+  //   setTimerStarter(true);
+  // };
 
   return (
     <div className="container text-center" style={{ width: 340 }}>
@@ -35,12 +54,7 @@ function App() {
             <div className="align-self-center m-2 borderInsideS">
               <img src="acierto.png" style={{ width: 50 }} />
             </div>
-            <div
-              className="lcdText text-danger pe-2 m-2 borderInsideS"
-              style={{ width: 54 }}
-            >
-              00
-            </div>
+            <Time timerStarted={timerStarted}/>
           </div>
         </div>
         <div className="row borderInside bg-body-secondary text-center justify-content-center">
