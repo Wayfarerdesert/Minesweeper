@@ -22,6 +22,6 @@ export default function Time({ timerStarted }) {
     }, [timerStarted]);
 
     return (
-        <div className="lcdText text-danger pe-2 m-2 borderInsideS" style={{ width: 54 }}>{seconds}</div>
+        <div className="lcdText text-danger pe-2 m-2 borderInsideS" style={{ width: 94 }}>{seconds}</div>
     );
 };
