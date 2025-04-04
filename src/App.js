@@ -1,73 +1,37 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
-import Cell from './Cell';
-import Time from './Time';
+import CreateBoard from './components/Board';
+import Cell from './components/Cell';
+import Time from './components/Time';
 
 function App() {
-  // Game Calls Values
-  const values = [
-    '1', '0', '*', '1', '0', '2', '*', '1', '0', '1',
-    '*', '1', '0', '1', '2', '1', '0', '*', '2', '0',
-    '*', '1', '0', '1', '0', '1', '2', '*', '1', '2',
-    '3', '0', '*', '1', '0', '2', '*', '1', '0', '1',
-    '*', '1', '0', '1', '2', '1', '0', '*', '2', '0',
-    '*', '1', '0', '1', '0', '1', '2', '*', '13', '2',
-    '1', '0', '*', '1', '0', '2', '*', '1', '0', '1',
-    '*', '1', '0', '3', '2', '1', '0', '*', '2', '0',
-    '*', '1', '0', '1', '0', '1', '2', '*', '1', '2',
-    '1', '0', '*', '1', '0', '2', '*', '1', '0', '3'
-  ];
-
-  const colors = {
-    //   cellColor = '#000000'
-    '0': 'black',
-    //   cellColor = '#0000ff';
-    '1': 'blue',
-    //   cellColor = '#008000';
-    '2': 'green',
-    //   cellColor = '#ff0000'
-    '3': 'red'
-  }
-
-  // Define cells componets values
-  const [valueMap, setValueMap] = useState(Array(100).fill(" "));
-
-  const cell = valueMap.map((item, index) =>
-    <div className='col-auto p-0' key={index}>
-      <Cell key={index} value={item} onCellClick={() => showValue(index)} color={colors[item]} />
-    </div>
-  );
-
-  // console.log("----- CARGAMOS APP")
-
-  // Time Starter
   const [timerStarted, setTimerStarter] = useState(false);
+  const [board, setBoard] = useState([]);
+
+  const BOARD_SIZE = 10;
+  const NUMBER_OF_MINES = 8;
 
   // Function response START btn
-  const btnStart = () => {
-    setValueMap(Array(100).fill(" "));
+  const startTimer = () => {
+    // setValueMap(Array(100).fill(" "));
     setTimerStarter(true);
-    // alert('START THE GAME!')
-  }
+  };
 
-  // Change cell value
-  const showValue = (index) => {
-    const newValue = valueMap.slice();
-    newValue[index] = values[index];
-    setValueMap(newValue);
-    // console.log(value)
-  }
+  useEffect(() => {
+    // Initialize the board when the component mounts
+    const initialBoard = CreateBoard(BOARD_SIZE, NUMBER_OF_MINES);
+    setBoard(initialBoard);
+  }, []);
 
-  // const startTimer = () => {
-  //   setTimerStarter(true);
-  // };
+
+  console.log(board);
 
   return (
     <div className="container text-center" style={{ width: 600 }}>
       <div className="grid bg-body-secondary py-2 px-4 borderOutSide m-0">
         <div className="row bg-body-secondary borderInside">
           <div className="d-flex flex-wrap justify-content-around">
-            <div className="lcdText text-danger pe-2 m-2 borderInsideS" style={{ width: 94 }}>10</div>
+            <div className="lcdText text-danger pe-2 m-2 borderInsideS" style={{ width: 94 }}>{NUMBER_OF_MINES}</div>
             <div className="align-self-center m-2 borderInsideS">
               <img src="success.png" style={{ width: 50 }} alt="Icon" />
             </div>
@@ -80,13 +44,27 @@ function App() {
             <div
               className="d-flex flex-wrap justify-content-center"
             >
-              {cell}
+              {/* Rendering the board */}
+              {board.map((row, rowIndex) => (
+                <div key={rowIndex} className="row">
+                  {row.map((tile, colIndex) => (
+                    <div key={colIndex} className="col-auto p-0">
+                      {/* Pass data to the Cell component */}
+                      <Cell
+                        value={tile.value}
+                        status={tile.status}
+                      />
+                    </div>
+                  ))}
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </div>
+
       <div>
-        <button className='btn btn-outline-secondary mt-2' onClick={btnStart}>START</button>
+        <button className='btn btn-outline-secondary mt-2' onClick={startTimer}>START</button>
       </div>
     </div>
   );
