@@ -4,14 +4,14 @@
 const TITLE_STATUS = {
     HIDDEN: 'hidden',
     NUMBER: 'number',
-    MINE: 'mine',
-    FLAG: 'flag'
+    MARKED: 'marked',
+    MINE: 'mine'
 };
 
 function CreateBoard(boardSize, numberOfMines) {
     const board = [];
     const minePositions = getMinesPositions(boardSize, numberOfMines);
-    console.log(minePositions);
+    console.log("Mines positions:", minePositions);
 
     for (let x = 0; x < boardSize; x++) {
         const row = [];
@@ -46,6 +46,7 @@ function getMinesPositions(boardSize, numberOfMines) {
     }
     return positions;
 }
+
 
 export default CreateBoard;
 
