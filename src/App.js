@@ -11,10 +11,64 @@ function App() {
   const BOARD_SIZE = 10;
   const NUMBER_OF_MINES = 8;
 
+
+  const getAdjacentCells = (row, col, board) => {
+    const tiles = [];
+
+    for (let xOffset = -1; xOffset <= 1; xOffset++) {
+      for (let yOffset = -1; yOffset <= 1; yOffset++) {
+        const newRow = row + xOffset;
+        const newCol = col + yOffset;
+
+        if (
+          (xOffset !== 0 || yOffset !== 0) && // skip the current cell
+          newRow >= 0 && newRow < board.length &&
+          newCol >= 0 && newCol < board[0].length
+        ) {
+          tiles.push({ ...board[newRow][newCol], x: newRow, y: newCol });
+        }
+      }
+    }
+    return tiles;
+  }
+
+
   // Function to handle cell click (left-click)
   // This function can be used to reveal the cell or perform any action
   const handleClick = (row, col) => {
-    console.log(`Cell clicked at row: ${row}, col: ${col}`);
+    const newBoard = [...board];
+    const cell = newBoard[row][col];
+
+    if (cell.status !== "hidden") {
+      return; // Ignore clicks on revealed or marked cells
+    }
+
+    if (cell.mine) {
+      cell.status = "mine";
+      // alert("Game Over! You clicked on a mine.");
+      // return
+    } else { // If the cell is not a mine, reveal it
+      const reveal = (row, col, board) => {
+        const currentCell = board[row][col];
+        if (currentCell.status !== "hidden") return;
+
+        const adjacentCells = getAdjacentCells(row, col, board);
+        const mineCount = adjacentCells.filter(adj => adj.mine).length;
+
+        currentCell.status = "number";
+        currentCell.value = mineCount > 0 ? mineCount : "";
+
+        if (mineCount === 0) {
+          adjacentCells.forEach(({ x, y }) => {
+            reveal(x, y, board);
+          });
+        }
+      };
+      reveal(row, col, newBoard);
+    }
+
+    setBoard(newBoard);
+    // console.log("Clicked cell:", cell);
   }
 
   // Function to handle cell marking (right-click)

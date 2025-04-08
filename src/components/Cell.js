@@ -1,5 +1,5 @@
 function Cell({ value = " ", status, onCellClick, onMarkClick }) {
-    const cellColor = {
+    const numColor = {
         '0': 'black',
         '1': 'blue',
         '2': 'green',
@@ -21,7 +21,7 @@ function Cell({ value = " ", status, onCellClick, onMarkClick }) {
                     content: <img src="flag.png" alt="Flag" style={{ width: "30px" }} />
                 };
             case "number":
-                return { color: cellColor[value] || "black", content: value }
+                return { color: numColor[value] || "black", content: value }
             case "hidden":
                 return { backgroundColor: "gray" };
             default:
