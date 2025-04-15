@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react';
 import './App.css';
-import CreateBoard from './components/Board';
+import { CreateBoard, CheckWin, CheckLose } from './components/Board';
 import Cell from './components/Cell';
 import Time from './components/Time';
 
 function App() {
   const [timerStarted, setTimerStarter] = useState(false);
   const [board, setBoard] = useState([]);
+  const [gameOver, setGameOver] = useState(false);
 
   const BOARD_SIZE = 10;
-  const NUMBER_OF_MINES = 8;
+  const NUMBER_OF_MINES = 3;
 
 
   const getAdjacentCells = (row, col, board) => {
@@ -36,6 +37,8 @@ function App() {
   // Function to handle cell click (left-click)
   // This function can be used to reveal the cell or perform any action
   const handleClick = (row, col) => {
+    if (gameOver) return; // Prevent clicks if the game is over
+
     const newBoard = [...board];
     const cell = newBoard[row][col];
 
@@ -68,6 +71,7 @@ function App() {
     }
 
     setBoard(newBoard);
+    checkGameOver(newBoard);
     // console.log("Clicked cell:", cell);
   }
 
@@ -93,6 +97,35 @@ function App() {
     }, 0);
 
     return NUMBER_OF_MINES - minesLeft;
+  }
+
+  const checkGameOver = (newBoard) => {
+    const winGame = CheckWin(newBoard);
+    const loseGame = CheckLose(newBoard);
+
+    if (winGame || loseGame) {
+      setTimerStarter(false);
+      setGameOver(true);
+    }
+
+    if (winGame) {
+      alert("You win!");
+    }
+
+    if (loseGame) {
+      const revealedBoard = newBoard.map(row => {
+        return row.map(cell => {
+          if (cell.mine) {
+            cell.status = "mine";
+          }
+          return cell;
+        });
+      }
+      );
+
+      setBoard(revealedBoard);
+      alert("You lose!");
+    }
   }
 
   // Function response START btn
@@ -140,6 +173,7 @@ function App() {
                         status={tile.status}
                         onCellClick={() => handleClick(rowIndex, colIndex)}
                         onMarkClick={() => handleMark(rowIndex, colIndex)}
+                        gameOver={gameOver}
                       />
                     </div>
                   ))}

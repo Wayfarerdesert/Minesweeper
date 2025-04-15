@@ -8,7 +8,7 @@ const TITLE_STATUS = {
     MINE: 'mine'
 };
 
-function CreateBoard(boardSize, numberOfMines) {
+export function CreateBoard(boardSize, numberOfMines) {
     const board = [];
     const minePositions = getMinesPositions(boardSize, numberOfMines);
     console.log("Mines positions:", minePositions);
@@ -47,7 +47,20 @@ function getMinesPositions(boardSize, numberOfMines) {
     return positions;
 }
 
+export function CheckWin(board) {
+    return board && board.every((row) =>
+        row.every((cell) => {
+            return cell.status === TITLE_STATUS.NUMBER ||
+                (cell.mine &&
+                    (cell.status === TITLE_STATUS.MARKED || cell.status === TITLE_STATUS.HIDDEN))
+        }));
+}
 
-export default CreateBoard;
+export function CheckLose(board) {
+    return board && board.some((row) =>
+        row.some((cell) =>
+            cell.status === TITLE_STATUS.MINE));
+}
+
 
 
