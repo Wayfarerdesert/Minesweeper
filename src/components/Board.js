@@ -16,12 +16,12 @@ export function CreateBoard(boardSize, numberOfMines) {
     for (let x = 0; x < boardSize; x++) {
         const row = [];
         for (let y = 0; y < boardSize; y++) {
-            const isMine = minePositions.some((mine) => mine.x === x && mine.y === y);
+            const isMine = minePositions.find((mine) => mine.x === x && mine.y === y);
 
             row.push({
                 x,
                 y,
-                mine: isMine,
+                mine: isMine ? true : false,
                 status: TITLE_STATUS.HIDDEN,
             });
         }
@@ -38,10 +38,8 @@ function getMinesPositions(boardSize, numberOfMines) {
         const x = Math.floor(Math.random() * boardSize);
         const y = Math.floor(Math.random() * boardSize);
 
-        const position = { x, y };
-
-        if (!positions.includes(position)) {
-            positions.push(position);
+        if (!positions.some((position) => position.x === x && position.y === y)) {
+            positions.push({ x, y });
         }
     }
     return positions;

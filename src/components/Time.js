@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-export default function Time({ timerStarted }) {
+export default function Time({ timerStarted, reset }) {
     const [seconds, setSeconds] = useState(0);
 
 
@@ -20,6 +20,10 @@ export default function Time({ timerStarted }) {
             clearInterval(interval);
         };
     }, [timerStarted]);
+
+    useEffect(() => {
+        setSeconds(0);
+    }, [reset]);
 
     return (
         <div className="lcdText text-danger pe-2 m-2 borderInsideS" style={{ width: 94 }}>{seconds}</div>

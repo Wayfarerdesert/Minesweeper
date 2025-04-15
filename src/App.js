@@ -1,16 +1,27 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './App.css';
 import { CreateBoard, CheckWin, CheckLose } from './components/Board';
 import Cell from './components/Cell';
 import Time from './components/Time';
+import GameControls from './components/GameControls';
 
 function App() {
-  const [timerStarted, setTimerStarter] = useState(false);
   const [board, setBoard] = useState([]);
+  const [timerStarted, setTimerStarter] = useState(false);
+  const [resetSignal, setResetSignal] = useState(false);
   const [gameOver, setGameOver] = useState(false);
+  const [gameLost, setGameLost] = useState(false);
+  const [gameWon, setGameWon] = useState(false);
+  const [markedCells, setMarkedCells] = useState(false);
 
   const BOARD_SIZE = 10;
-  const NUMBER_OF_MINES = 3;
+  const minesCount = useRef(10); // Default mine count
+  const NUMBER_OF_MINES = minesCount;
+
+  const initialBoard = () => {
+    const board = CreateBoard(BOARD_SIZE, NUMBER_OF_MINES.current);
+    setBoard(board);
+  };
 
 
   const getAdjacentCells = (row, col, board) => {
@@ -37,7 +48,7 @@ function App() {
   // Function to handle cell click (left-click)
   // This function can be used to reveal the cell or perform any action
   const handleClick = (row, col) => {
-    if (gameOver) return; // Prevent clicks if the game is over
+    if (!timerStarted || gameOver) return; // Prevent clicks if the game is over
 
     const newBoard = [...board];
     const cell = newBoard[row][col];
@@ -72,12 +83,14 @@ function App() {
 
     setBoard(newBoard);
     checkGameOver(newBoard);
-    // console.log("Clicked cell:", cell);
   }
+
 
   // Function to handle cell marking (right-click)
   // This function can be used to toggle flags or marks on the cell
   const handleMark = (row, col) => {
+    if (!timerStarted || gameOver) return;
+
     const newBoard = [...board];
     const cell = newBoard[row][col];
 
@@ -87,17 +100,57 @@ function App() {
       cell.status = "hidden";
     }
 
+    setMarkedCells(true);
     setBoard(newBoard);
     console.log("Marked cell:", cell);
   }
 
-  const ListMinesLeft = () => {
-    const minesLeft = board.reduce((count, row) => {
+
+  const listMinesLeft = () => {
+    const markedCount = board.reduce((count, row) => {
       return count + row.filter(cell => cell.status === "marked").length;
     }, 0);
 
-    return NUMBER_OF_MINES - minesLeft;
+    return Math.max(NUMBER_OF_MINES.current - markedCount, 0);
+  };
+
+
+  const gameStatus = () => {
+    if (gameWon) {
+      return (
+        <div>
+          <span className="text-success px-3">You Win!</span>
+          <img src="trophy.png" style={{ width: 50 }} alt="Trophy" />
+        </div>
+      );
+    }
+
+    if (gameLost) {
+      return (
+        <div>
+          <span className="text-danger px-3">Game Over!</span>
+          <img src="bomb.png" style={{ width: 50 }} alt="bomb" />
+        </div>
+      );
+    }
+
+    if (markedCells) {
+      return (
+        <div>
+          <img src="flag.png" style={{ width: 50 }} alt="Flag" />
+        </div>
+      );
+    }
+
+    else {
+      return (
+        <div>
+          <img src="success.png" style={{ width: 50 }} alt="success" />
+        </div>
+      );
+    }
   }
+
 
   const checkGameOver = (newBoard) => {
     const winGame = CheckWin(newBoard);
@@ -109,6 +162,7 @@ function App() {
     }
 
     if (winGame) {
+      setGameWon(true);
       alert("You win!");
     }
 
@@ -123,36 +177,49 @@ function App() {
       }
       );
 
+      setGameLost(true);
       setBoard(revealedBoard);
       alert("You lose!");
     }
   }
 
+
   // Function response START btn
-  const startTimer = () => {
-    // setValueMap(Array(100).fill(" "));
-    setTimerStarter(true);
+  const startGame = () => {
+    setTimerStarter(prev => !prev);
+    initialBoard();
   };
+
+
+  const resetGame = () => {
+    initialBoard();
+    setGameOver(false);
+    setGameLost(false);
+    setGameWon(false);
+    setMarkedCells(false);
+    setTimerStarter(false);
+    NUMBER_OF_MINES.current = 10;
+    setResetSignal(prev => !prev);
+  }
+
 
   useEffect(() => {
     // Initialize the board when the component mounts
-    const initialBoard = CreateBoard(BOARD_SIZE, NUMBER_OF_MINES);
-    setBoard(initialBoard);
+    // setBoard(initialBoard);
+    initialBoard();
   }, []);
 
-
-  // console.log("Board:", board);
 
   return (
     <div className="container text-center" style={{ width: 600 }}>
       <div className="grid bg-body-secondary py-2 px-4 borderOutSide m-0">
         <div className="row bg-body-secondary borderInside">
           <div className="d-flex flex-wrap justify-content-around">
-            <div className="lcdText text-danger pe-2 m-2 borderInsideS" style={{ width: 94 }}>{ListMinesLeft()}</div>
+            <div className="lcdText text-danger pe-2 m-2 borderInsideS" style={{ width: 94 }}>{listMinesLeft()}</div>
             <div className="align-self-center m-2 borderInsideS">
-              <img src="success.png" style={{ width: 50 }} alt="Icon" />
+              {gameStatus()}
             </div>
-            <Time timerStarted={timerStarted} />
+            <Time timerStarted={timerStarted} reset={resetSignal} />
           </div>
         </div>
 
@@ -184,9 +251,15 @@ function App() {
         </div>
       </div>
 
-      <div>
-        <button className='btn btn-outline-secondary mt-2' onClick={startTimer}>START</button>
-      </div>
+
+      <GameControls
+        gameOver={gameOver}
+        timerStarted={timerStarted}
+        startTimer={startGame}
+        resetGame={resetGame}
+        setMineCount={(value) => (minesCount.current = value)}
+      />
+
     </div>
   );
 }
