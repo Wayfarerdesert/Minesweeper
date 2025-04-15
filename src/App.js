@@ -121,7 +121,7 @@ function App() {
       return (
         <div>
           <span className="text-success px-3">You Win!</span>
-          <img src="trophy.png" style={{ width: 50 }} alt="Trophy" />
+          <img src="/images/trophy.png" style={{ width: 50 }} alt="Trophy" />
         </div>
       );
     }
@@ -130,7 +130,7 @@ function App() {
       return (
         <div>
           <span className="text-danger px-3">Game Over!</span>
-          <img src="bomb.png" style={{ width: 50 }} alt="bomb" />
+          <img src="/images/bomb.png" style={{ width: 50 }} alt="bomb" />
         </div>
       );
     }
@@ -138,7 +138,7 @@ function App() {
     if (markedCells) {
       return (
         <div>
-          <img src="flag.png" style={{ width: 50 }} alt="Flag" />
+          <img src="/images/flag.png" style={{ width: 50 }} alt="Flag" />
         </div>
       );
     }
@@ -146,7 +146,7 @@ function App() {
     else {
       return (
         <div>
-          <img src="success.png" style={{ width: 50 }} alt="success" />
+          <img src="/images/success.png" style={{ width: 50 }} alt="success" />
         </div>
       );
     }
