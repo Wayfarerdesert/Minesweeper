@@ -17,6 +17,7 @@ function App() {
   const BOARD_SIZE = 10;
   const minesCount = useRef(10); // Default mine count
   const NUMBER_OF_MINES = minesCount;
+  const isBoardInitialized = useRef(false);
 
   const initialBoard = () => {
     const board = CreateBoard(BOARD_SIZE, NUMBER_OF_MINES.current);
@@ -187,7 +188,10 @@ function App() {
   // Function response START btn
   const startGame = () => {
     setTimerStarter(prev => !prev);
-    initialBoard();
+    if (!timerStarted && !isBoardInitialized.current) {
+      isBoardInitialized.current = true;
+      initialBoard();
+    }
   };
 
 
@@ -200,6 +204,7 @@ function App() {
     setTimerStarter(false);
     NUMBER_OF_MINES.current = 10;
     setResetSignal(prev => !prev);
+    isBoardInitialized.current = false;
   }
 
 

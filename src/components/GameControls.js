@@ -37,7 +37,13 @@ export default function GameControls({ gameOver, timerStarted, startTimer, reset
 
             <button
                 className="btn btn-outline-secondary mt-2"
-                onClick={gameOver ? resetGame : startTimer}
+                onClick={() => {
+                    if (gameOver) {
+                        resetGame();
+                    } else {
+                        startTimer();
+                    }
+                }}
                 disabled={parseInt(minesInput) < 1 || parseInt(minesInput) > 99}
             >
                 {gameOver ? "RESTART" : timerStarted ? "STOP" : "START"}
