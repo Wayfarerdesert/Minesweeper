@@ -12,13 +12,13 @@ function Cell({ value = " ", status, onCellClick, onMarkClick }) {
                 return {
                     backgroundColor: '#ff6666',
                     color: 'transparent',
-                    content: <img src="bomb.png" alt="Bomb" style={{ width: "30px" }} />
+                    content: <img src="/images/bomb.png" alt="Bomb" style={{ width: "30px" }} />
                 };
             case "marked":
                 return {
                     // backgroundColor: '#FFD700',
                     color: 'transparent',
-                    content: <img src="flag.png" alt="Flag" style={{ width: "30px" }} />
+                    content: <img src="/images/flag.png" alt="Flag" style={{ width: "30px" }} />
                 };
             case "number":
                 return { color: numColor[value] || "black", content: value }

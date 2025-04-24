@@ -2,9 +2,7 @@
 
 A classic Minesweeper game built with React and Bootstrap. Customize the number of mines, reveal cells, flag suspected bombs, and beat the clock!
 
-[🚀 Try the Live Demo](#) | [📸 View Screenshots](./public/screenshoot)
-
----
+[🚀 Try the Live Demo](https://minesweeper-omega-jade.vercel.app/)
 
 ## 🎮 Features
 
@@ -31,8 +29,9 @@ A classic Minesweeper game built with React and Bootstrap. Customize the number 
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/your-username/react-minesweeper.git
-cd react-minesweeper
+git clone https://github.com/Wayfarerdesert/Minesweeper.git
+
+cd minesweeper
 ```
 
 ### 2.Install dependencies
@@ -55,8 +54,8 @@ npm start
 
 ## 📸 UI Preview
 
-![screenshot](./public/images/bomb.jpg)
-![Gameplay Demo](./screenshots/demo.gif)
+![screenshot](./preview/screenshot.webp)
+![Gameplay Demo](./preview/gameplay.gif)
 
 ## 🚧 Future Improvements
 

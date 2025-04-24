@@ -24,7 +24,7 @@ export default function GameControls({ gameOver, timerStarted, startTimer, reset
 
 
     return (
-        <div className="d-flex flex-column align-items-center">
+        <div className="input-group mt-2 mx-auto" style={{ maxWidth: "300px" }}>
             <input
                 type="text"
                 className="form-control mt-2"
@@ -36,7 +36,8 @@ export default function GameControls({ gameOver, timerStarted, startTimer, reset
             />
 
             <button
-                className="btn btn-outline-secondary mt-2"
+                className={`btn mt-2 ${gameOver ? "btn-danger" : timerStarted ? "btn-warning" : "btn-success"}`}
+                style={{ width: "100px" }}
                 onClick={() => {
                     if (gameOver) {
                         resetGame();
